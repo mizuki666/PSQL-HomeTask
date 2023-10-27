@@ -1,0 +1,45 @@
+-- 'flight_number' - KEY
+
+-- 1 task with JOIN выбор ФИО пассажиров и города назначения
+SELECT Passengers.passenger_name, Flights.destination_city
+FROM Flights
+JOIN Passengers ON Flights.flight_number = Passengers.flight_number;
+
+-- 2 task with JOIN выбор всех данных о пассажирах и соответствующих им рейсах
+SELECT * 
+FROM Flights
+JOIN Passengers ON Flights.flight_number = Passengers.flight_number;
+
+-- 3 task Города отправления и ФИО пассажиров для рейсов, где цена больше 250
+SELECT Flights.departure_city, Passengers.passenger_name, Flights.price
+FROM Flights
+JOIN Passengers ON Flights.flight_number = Passengers.flight_number
+WHERE Flights.price > 250;
+
+-- 4 task Ранжирование рейсов по цене (дорогие, средние, дешевые):
+SELECT Flights.flight_number, Flights.price,
+  CASE 
+    WHEN Flights.price > 300 THEN 'Дорогой'
+    WHEN Flights.price > 200 THEN 'Средний'
+    ELSE 'Дешевый'
+  END AS price_range
+FROM Flights
+JOIN Passengers ON Flights.flight_number = Passengers.flight_number;
+
+-- 5 task все отправления
+SELECT Flights.departure_city, Flights.destination_city
+FROM Flights
+CROSS JOIN Flights AS DestFlights
+WHERE Flights.flight_number <> DestFlights.flight_number;
+
+-- 6 task Cамые заполненные рейсы первыми
+SELECT
+  flight_number,
+  destination_city,
+  occupied_seats,
+  (SELECT COUNT(*) FROM Flights F WHERE F.occupied_seats >= Flights.occupied_seats) AS flight_rank
+FROM Flights
+ORDER BY flight_rank;
+
+
+
